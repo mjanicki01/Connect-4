@@ -17,7 +17,7 @@ function makeBoard() {
   for(let i = 0; i < HEIGHT; i++){
     let row = []
     for (let j = 0; j < WIDTH; j++) {
-      row.push(undefined);
+      row.push(null);
     }
     board.push(row);
   }
@@ -25,8 +25,8 @@ function makeBoard() {
 
 // Create HTML gameboard
 function makeHtmlBoard() {
-  const htmlBoard = document.getElementById("board");
-  let top = document.createElement("tr");
+  const board = document.getElementById("board");
+  const top = document.createElement("tr");
   top.setAttribute("id", "column-top");
   top.addEventListener("click", handleClick);
 
@@ -38,7 +38,7 @@ function makeHtmlBoard() {
     top.append(headCell);
   }
 
-  htmlBoard.append(top);
+  board.append(top);
 
   // Build the remainder of the board based on HEIGHT and WIDTH values
   // Assign each cell an id based on the (x, y) coordinates within the HTML table
@@ -49,7 +49,7 @@ function makeHtmlBoard() {
       td_container.setAttribute("id", `${y}-${x}`);
       row.append(td_container);
     }
-    htmlBoard.append(row);
+    board.append(row);
   }
 }
 
@@ -64,9 +64,12 @@ function findSpotForCol(x) {
 
 // Add visual marker into selected (x, y) coordinates on board
 function placeInTable(y, x) {
-  let gameCell = document.getElementById(`${y}-${x}`);
-  gameCell.classList.add('peice', (`p${currPlayer}`));
+  const gamePiece = document.createElement("div");
+  gamePiece.classList.add("piece", `p${currPlayer}`);
+  const gameCell = document.getElementById(`${y}-${x}`);
+  gameCell.append(gamePiece);
 }
+
 
 function endGame(msg) {
   alert(msg);
@@ -90,16 +93,13 @@ function handleClick(evt) {
   }
 
   // check for tie
-/*   function checkForTie(cells) {
-    return cells.every(function ([y, x]) {
-      y !== undefined &&
-      x !== undefined
-      alert("It's a tie!");
-    })
-  } */
+  if (board.every(row => row.every(cell => cell))) {
+    return endGame("It\'s a tie!");
+  }
   
   // switch players
   currPlayer === 1 ? currPlayer = 2 : currPlayer = 1;
+
 }
 
 
